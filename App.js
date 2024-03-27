@@ -1,20 +1,45 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import Scan from './src/screens/ScanScreen';
+import { NavigationContainer } from '@react-navigation/native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import CategoriesScreen from './src/screens/CategoriesScreen';
 
-export default function App() {
+const Tab = createBottomTabNavigator()
+
+const App= () => {
+  const {
+    scanTitle
+} = styles;
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+    <NavigationContainer>
+      
+      <Tab.Navigator
+    screenOptions={{
+      headerTitleAlign: 'center',
+      // Other screen options...
+    }}
+  >
+        <Tab.Screen style={[scanTitle]} name="Scan" component={Scan} />
+        <Tab.Screen name="Categories" component={CategoriesScreen} />
+        {/* Add more Tab.Screen components for additional tabs */}
+      </Tab.Navigator>
       <StatusBar style="auto" />
-    </View>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    flex: 1, // Take up all screen
+    justifyContent: 'center', // Center vertically
+    alignItems: 'center', // Center horizontally
+  },
+  scanTitle: {
+    fontSize: 10,
+    fontWeight: 'bold',
     justifyContent: 'center',
   },
 });
+
+export default App;
