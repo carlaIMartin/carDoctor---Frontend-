@@ -1,19 +1,29 @@
 import React from 'react';
-import { StyleSheet, View, Button } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import CategoriesScreen from './CategoriesScreen';
+import { StyleSheet, View, Button, ActivityIndicator } from 'react-native';
+import useScanCodes from '../hooks/useScanCodes';
 
 const Scan = ({ navigation }) => {
+  const { handleScanCodeSubmit, isSubmitting } = useScanCodes();
+
+  const handlePress = async () => {
+    console.log('Button pressed');
+    await handleScanCodeSubmit(/* You need to pass the actual code data here */);
+    navigation.navigate('Categories');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <Button
-          onPress={() => navigation.navigate('Categories')}
-          title="SCAN NOW"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
+      {isSubmitting ? (
+          <ActivityIndicator size="large" color="#841584" />
+        ) : (
+          <Button
+            onPress={handlePress}
+            title="SCAN NOW"
+            color="#841584"
+            accessibilityLabel="Learn more about this purple button"
+          />
+        )}
       </View>
     </View>
   );
