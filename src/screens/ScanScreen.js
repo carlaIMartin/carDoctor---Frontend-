@@ -1,14 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { StyleSheet, View, Button, ActivityIndicator } from 'react-native';
 import useScanCodes from '../hooks/useScanCodes';
 
 const Scan = ({ navigation }) => {
-  const { handleScanCodeSubmit, isSubmitting } = useScanCodes();
+  const {result, handleScanCodeSubmit, isSubmitting, hasBeenSubmitted } = useScanCodes();
+
+  const[scanClicked, setScanClicked] = useState(false);
+   
 
   const handlePress = async () => {
     console.log('Button pressed');
-    await handleScanCodeSubmit(/* You need to pass the actual code data here */);
-    navigation.navigate('Categories');
+    const responseCategory = await handleScanCodeSubmit(/* code data here */);
+    navigation.navigate('CategoriesScreen');
+    
+
   };
 
   return (
@@ -31,13 +36,13 @@ const Scan = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // Take up all screen
-    justifyContent: 'center', // Center vertically
-    alignItems: 'center', // Center horizontally
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
   },
   buttonContainer: {
-    width: '60%', // Width of the button
-    height: 200, // Height of the button for a big button
+    width: '60%', 
+    height: 200,
   },
 });
 

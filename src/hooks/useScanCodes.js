@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 
 const useScanCodes = () => {
+  const [result, setResult] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
- 
+  const [hasBeenSubmitted, setHasBeenSubmitted] = useState(false);
 
   const handleScanCodeSubmit = async (codeData) => {
     setIsSubmitting(true);
@@ -32,18 +33,20 @@ const useScanCodes = () => {
       }
 
       const result = await codes.json();
+      setResult(result);
       Alert.alert('Success', 'Code scanned successfully!', [{ text: 'OK' }]);
-      console.log(result); // For debugging purposes
+      console.log(result); 
       
     } catch (error) {
       Alert.alert('Error', 'Failed to scan the code!', [{ text: 'OK' }]);
-      console.error(error); // For debugging purposes
+      console.error(error); 
     } finally {
       setIsSubmitting(false);
+      setHasBeenSubmitted(true);
       
     }
   };
-  return { handleScanCodeSubmit, isSubmitting };
+  return { result, handleScanCodeSubmit, isSubmitting, hasBeenSubmitted };
 };
 
 export default useScanCodes;

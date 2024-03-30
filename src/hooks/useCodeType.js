@@ -33,11 +33,11 @@ const useCodeType = () => {
 
       const result = await codes.json();
       Alert.alert('Success', 'Code scanned successfully!', [{ text: 'OK' }]);
-      console.log(result); // For debugging purposes
+      console.log(result); 
       
     } catch (error) {
       Alert.alert('Error', 'Failed to scan the code!', [{ text: 'OK' }]);
-      console.error(error); // For debugging purposes
+      console.error(error); 
     } finally {
       setIsSubmitting(false);
       

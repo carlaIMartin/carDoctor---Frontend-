@@ -1,23 +1,19 @@
 import React from 'react';
 import { StyleSheet, View, ScrollView, TouchableOpacity, Text } from 'react-native';
 
-
 const categories = ['Engine', 'Sensors', 'ECU', 'Cluster', 'Noxe', 'Fashion', 'Tech', 'Travel', 'Food', 'Sports', 'Music', 'Movies', 'ceva'];
 
-const CategoriesScreen = ( {navigation} ) => {
-
-  const handlePress = async (category) => {
+const CategoriesScreen = ({ navigation }) => {
+  const handleCategoryPress = async (category) => {
     console.log(`You clicked on ${category}`);
-    // navigation.navigate('Results');
-    // Handle the press
     try {
       const responseCategory = await fetch(`http://192.168.68.1:8080/codeType/${category}`);
       const data = await responseCategory.json();
       console.log(data);
-      // navigation.navigate('Results', { data });
+      // Correctly navigating and passing data to the ResultsScreen
+      navigation.navigate('ResultsScreen', { data });
     } catch (error) {
       console.error('There was an error fetching the data:', error);
-      // Handle the error (e.g., show an error message)
     }
   };
 
@@ -28,7 +24,7 @@ const CategoriesScreen = ( {navigation} ) => {
           <TouchableOpacity
             key={index}
             style={styles.button}
-            onPress={() => handlePress(category)}
+            onPress={() => handleCategoryPress(category)}
             activeOpacity={0.7}
           >
             <Text style={styles.buttonText}>{category}</Text>

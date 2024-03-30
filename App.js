@@ -4,48 +4,47 @@ import Scan from './src/screens/ScanScreen';
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import CategoriesScreen from './src/screens/CategoriesScreen';
-import useScanCodes
- from './src/hooks/useScanCodes';
-// import ResultsScreen from './src/screens/ResultsScreen';
+import useScanCodes from './src/hooks/useScanCodes';
+import { createStackNavigator } from '@react-navigation/stack';
+import setScanClicked from './src/screens/ScanScreen';
+import React, { useState } from 'react';
+import ResultsScreen from './src/screens/ResultsScreen';
 const Tab = createBottomTabNavigator()
+const Stack = createStackNavigator();
 
-const App= () => {
-  const {
-    container,
-    scanTitle
-} = styles;
+const ScanStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="ScanScreen" component={Scan} />
+      <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
+      <Stack.Screen name="ResultsScreen" component={ResultsScreen} />
+    </Stack.Navigator>
+  );
+};
+
+const App = () => {
+  const { container, scanTitle } = styles;
+  const [scanPressed, setScanPressed] = useState(false);
+  
+  // const handleScanSubmit = (hasBeenSubmitted) => {
+  //   setScanPressed(hasBeenSubmitted);
+  // };
   return (
     <NavigationContainer>
-      
-      <Tab.Navigator
-    screenOptions={{
-      headerTitleAlign: 'center',
-      // Other screen options...
-    }}
-  >
-        <Tab.Screen style={[scanTitle]} name="Scan" component={Scan} />
-        <Tab.Screen name="Categories" component={CategoriesScreen} />
-        {/* <Tab.Screen name="Results" component={ ResultsScreen} /> */}
-        {/* Add more Tab.Screen components for additional tabs */}
+      <Tab.Navigator screenOptions={{ headerTitleAlign: 'center' }}>
+        <Tab.Screen style={[scanTitle]} name="Scan" component={ScanStack} />
+        {/* <Tab.Screen name="Scan" component={Scan} /> */}
       </Tab.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
   );
-  if (loading) {
-    return (
-      <View style={styles.container} >
-        <ActivityIndicator size={"large"} color={"blue"} />
-      </View>
-    )
-  }
 }
-
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // Take up all screen
-    justifyContent: 'center', // Center vertically
-    alignItems: 'center', // Center horizontally
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
   },
   scanTitle: {
     fontSize: 10,
