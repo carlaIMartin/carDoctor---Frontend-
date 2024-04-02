@@ -5,6 +5,32 @@ const ResultsScreen = ({ route }) => {
   // Accessing the data passed through the navigation route
   const { data } = route.params;
 
+
+  data.map((item, index) => {
+    console.log('ROUTE PARAMS:', item.command);
+  });
+
+  // const [codesWithProblems, setCodesWithProblems] = useState([]);
+
+  // useEffect(() => {
+  //   const checkCodesForProblems = async () => {
+  //     let tempCodesWithProblems = [];
+
+  //     for (const code of data) {
+  //       if (["EGR_ERROR", "FUEL_INJECT_TIMING", "RPM", "SPEED"].includes(code.command) && code.problem) {
+  //         tempCodesWithProblems.push(code);
+  //       }
+  //     }
+
+  //     setCodesWithProblems(tempCodesWithProblems);
+  //   };
+
+  //   checkCodesForProblems();
+  // }, [data]);
+
+
+
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>

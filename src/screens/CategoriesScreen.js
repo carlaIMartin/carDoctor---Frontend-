@@ -1,40 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, ScrollView, TouchableOpacity, Text } from 'react-native';
 
-const categories = ['Engine', 'Sensors', 'ECU', 'Cluster', 'Noxe', 'Fashion', 'Tech', 'Travel', 'Food', 'Sports', 'Music', 'Movies', 'ceva'];
-const dataWithProblems = [];
-const categoriesWithProblems = [];
-// const buttonColor = (data, category) => {
-//   if (data.problem === true && data.type === category) {
-//     return styles.errorButton;
-//   }
-//   else
-//     return styles.button;
-// }
-
+const categories = ['Engine', 'Sensors', 'ECU', 'Cluster', 'Nox', 'Chassis', "Unknown"];
 
 const CategoriesScreen = ({ navigation }) => {
+  const [categoriesWithProblems, setCategoriesWithProblems] = useState([]);
+
+  useEffect(() => {
+    const checkCategoriesForProblems = async () => {
+      let tempCategoriesWithProblems = [];
+
+      for (const category of categories) {
+        try {
+          const response = await fetch(`http://192.168.68.1:8080/codeType/${category}`);
+          const data = await response.json();
+
+          const hasProblem = data.some(item => ["EGR_ERROR", "FUEL_INJECT_TIMING", "RPM", "SPEED"].includes(item.command) && item.problem);
+          if (hasProblem) {
+            tempCategoriesWithProblems.push(category);
+          }
+        } catch (error) {
+          console.error('Error fetching data for category:', category, error);
+        }
+      }
+
+      setCategoriesWithProblems(tempCategoriesWithProblems);
+    };
+
+    checkCategoriesForProblems();
+  }, []);
+
   const handleCategoryPress = async (category) => {
+    let tempCategoriesWithProblems = [];
+    let dataWithProblems = [];
+
     console.log(`You clicked on ${category}`);
     try {
       const responseCategory = await fetch(`http://192.168.68.1:8080/codeType/${category}`);
       const data = await responseCategory.json();
-      
-      // Reset dataWithProblems for the current category press
-      dataWithProblems.length = 0;
 
-      // Iterate over each item in the response data
       data.forEach(item => {
-        // Check if the command is one of the specified commands
-        if (["EGR_ERROR", "FUEL_INJECT_TIMING", "RPM"].includes(item.command)) {
-          // If it is, and the problem flag is true, add it to the dataWithProblems array
-          if (item.problem) {
-            dataWithProblems.push(item);
-          }
+        if (["EGR_ERROR", "FUEL_INJECT_TIMING", "RPM", "SPEED"].includes(item.command) && item.problem) {
+          dataWithProblems.push(item);
+          
         }
       });
 
-      // Log dataWithProblems if it has any entries
+      
+
       if (dataWithProblems.length > 0) {
         console.log("DATA THAT HAS PROBLEMS:", dataWithProblems);
       }
@@ -45,16 +58,13 @@ const CategoriesScreen = ({ navigation }) => {
     }
   };
 
-  
-
   return (
-    
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         {categories.map((category, index) => (
           <TouchableOpacity
             key={index}
-            style={styles.button}
+            style={categoriesWithProblems.includes(category) ? styles.errorButton : styles.button}
             onPress={() => handleCategoryPress(category)}
             activeOpacity={0.7}
           >
@@ -65,6 +75,8 @@ const CategoriesScreen = ({ navigation }) => {
     </View>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   container: {
